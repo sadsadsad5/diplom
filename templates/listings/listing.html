@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}{{ listing.title }} | Недвижимость{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Gradient Overlay -->
+<section id="showcase-inner" class="py-5 text-white position-relative"
+         style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('{% if listing.photo_main %}{{ listing.photo_main.url }}{% else %}/static/img/default-bg.jpg{% endif %}') no-repeat center center/cover;">
+    <div class="container position-relative" style="z-index: 1;">
+        <div class="row text-center">
+            <div class="col-md-12">
+                <h1 class="display-4 mb-3">{{ listing.title }}</h1>
+                <p class="lead mb-0">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    {% if listing.city or listing.state or listing.zipcode %}
+                        {{ listing.city|default:"" }}{% if listing.city and listing.state %}, {% endif %}
+                        {{ listing.state|default:"" }}{% if listing.zipcode and listing.state %}, {% endif %}
+                        {{ listing.zipcode|default:"" }}
+                    {% else %}
+                        Адрес не указан
+                    {% endif %}
+                </p>
+                {% if listing.price %}
+                <div class="mt-3">
+                    <span class="badge bg-primary fs-5 px-3 py-2">${{ listing.price|intcomma }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Breadcrumb Navigation -->
+<section id="bc" class="mt-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-light p-3 rounded">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'index' %}" class="text-decoration-none">
+                        <i class="fas fa-home me-1"></i> Главная
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'listings' %}" class="text-decoration-none">Объявления</a>
+                </li>
+                <li class="breadcrumb-item active text-truncate" style="max-width: 200px;" aria-current="page">
+                    {{ listing.title }}
+                </li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+{% include 'partials/_alerts.html' %}
+
+<!-- Listing Details Section -->
+<section id="listing" class="py-4">
+    <div class="container">
+        <a href="{% url 'listings' %}" class="btn btn-outline-primary mb-4">
+            <i class="fas fa-arrow-left me-2"></i> Вернуться к списку
+        </a>
+
+      <div class="row">
+        <!-- Main Content Column -->
+        <div class="col-lg-9">
+          <!-- Main Listing Image -->
+          <div class="card mb-4">
+            <img src="{{ listing.photo_main.url }}" alt="{{ listing.title }}" class="card-img-top img-fluid">
+          </div>
+
+          <!-- Thumbnail Gallery -->
+          <div class="row mb-5">
+            {% if listing.photo_1 %}
+            <div class="col-4 col-md-2 mb-3">
+              <a href="{{ listing.photo_1.url }}" data-lightbox="listing-images">
+                <img src="{{ listing.photo_1.url }}" alt="" class="img-thumbnail img-fluid">
+              </a>
+            </div>
+            {% endif %}
+            {% if listing.photo_2 %}
+            <div class="col-4 col-md-2 mb-3">
+              <a href="{{ listing.photo_2.url }}" data-lightbox="listing-images">
+                <img src="{{ listing.photo_2.url }}" alt="" class="img-thumbnail img-fluid">
+              </a>
+            </div>
+            {% endif %}
+            {% if listing.photo_3 %}
+            <div class="col-4 col-md-2 mb-3">
+              <a href="{{ listing.photo_3.url }}" data-lightbox="listing-images">
+                <img src="{{ listing.photo_3.url }}" alt="" class="img-thumbnail img-fluid">
+              </a>
+            </div>
+            {% endif %}
+            {% if listing.photo_4 %}
+            <div class="col-4 col-md-2 mb-3">
+              <a href="{{ listing.photo_4.url }}" data-lightbox="listing-images">
+                <img src="{{ listing.photo_4.url }}" alt="" class="img-thumbnail img-fluid">
+              </a>
+            </div>
+            {% endif %}
+            {% if listing.photo_5 %}
+            <div class="col-4 col-md-2 mb-3">
+              <a href="{{ listing.photo_5.url }}" data-lightbox="listing-images">
+                <img src="{{ listing.photo_5.url }}" alt="" class="img-thumbnail img-fluid">
+              </a>
+            </div>
+            {% endif %}
+            {% if listing.photo_6 %}
+            <div class="col-4 col-md-2 mb-3">
+              <a href="{{ listing.photo_6.url }}" data-lightbox="listing-images">
+                <img src="{{ listing.photo_6.url }}" alt="" class="img-thumbnail img-fluid">
+              </a>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Property Details -->
+          <div class="card mb-5">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span><i class="fas fa-money-bill-wave text-primary"></i> Цена</span>
+                      <span class="badge badge-primary badge-pill">
+                        {% if listing.price %}${{ listing.price|intcomma }}{% else %}Не указана{% endif %}
+                      </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span><i class="fas fa-bed text-primary"></i> Комнаты</span>
+                      <span>{{ listing.bedrooms|default:"Не указано" }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-bath text-primary"></i> Ванные</span>
+                        <span>{{ listing.bathrooms|floatformat:"0"|default:"Не указано" }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-car text-primary"></i> Гараж</span>
+                        <span>{{ listing.garage|yesno:"Есть,Нет" }}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="col-md-6">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span><i class="fas fa-ruler-combined text-primary"></i> Площадь</span>
+                      <span>{{ listing.sqft|default:"Не указана" }} м²</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-vector-square text-primary"></i> Участок</span>
+                        <span>
+                            {% if listing.lot_size %}
+                                {{ listing.lot_size }} соток
+                            {% else %}
+                                Нет
+                            {% endif %}
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <span><i class="fas fa-calendar-alt text-primary"></i> Дата</span>
+                      <span>
+                        {% if listing.list_date %}
+                          {{ listing.list_date|date:"d.m.Y" }}
+                        {% else %}
+                          Не указана
+                        {% endif %}
+                      </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-user-tie text-primary"></i>
+                            {% if listing.realtor %}
+                                Риэлтор
+                            {% else %}
+                                Пользователь
+                            {% endif %}
+                        </span>
+                        <span>
+                            {% if listing.realtor %}
+                                {{ listing.realtor.name }}
+                            {% elif listing.user %}
+                                {{ listing.user.get_full_name|default:listing.user.username }}
+                            {% else %}
+                                Не указан
+                            {% endif %}
+                        </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Property Description -->
+          <div class="card mb-5">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Описание</h5>
+            </div>
+            <div class="card-body">
+              <p class="card-text">
+                {% if listing.description %}
+                  {{ listing.description|linebreaks }}
+                {% else %}
+                  Описание отсутствует
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Column -->
+        <div class="col-lg-3">
+          <!-- Realtor Card -->
+          <div class="card mb-4">
+            {% if listing.realtor and listing.realtor.photo %}
+              <img src="{{ listing.realtor.photo.url }}" alt="Фото риэлтора" class="card-img-top">
+            {% else %}
+              <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                <i class="fas fa-user-tie fa-5x text-muted"></i>
+              </div>
+            {% endif %}
+
+              <div class="card-body">
+                  <h5 class="card-title">
+                      {% if listing.realtor %}
+                          Риэлтор
+                      {% else %}
+                          Пользователь
+                      {% endif %}
+                  </h5>
+                  <div class="d-flex align-items-center mb-3">
+                      <i class="fas fa-user-circle fa-2x text-primary mr-2"></i>
+                      <div>
+                          <h6 class="mb-0">
+                              {% if listing.realtor %}
+                                  {{ listing.realtor.name }}
+                              {% elif listing.user %}
+                                  {{ listing.user.get_full_name|default:listing.user.username }}
+                              {% else %}
+                                  Не указан
+                              {% endif %}
+                          </h6>
+                          {% if listing.realtor and listing.realtor.phone %}
+                              <small class="text-muted">{{ listing.realtor.phone }}</small>
+                          {% endif %}
+                      </div>
+                  </div>
+
+              {% if user.is_authenticated %}
+                <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal">
+                  <i class="fas fa-envelope"></i> Сделать запрос
+                </button>
+              {% else %}
+                <a href="{% url 'register' %}?next={{ request.path }}" class="btn btn-primary btn-block mb-2">
+                  <i class="fas fa-user-plus"></i> Зарегистрироваться
+                </a>
+                <p class="text-center small mb-0">
+                  Уже есть аккаунт? <a href="{% url 'login' %}?next={{ request.path }}">Войти</a>
+                </p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Inquiry Modal -->
+<div class="modal fade" id="inquiryModal" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content shadow-lg">
+      <!-- Заголовок модального окна -->
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title font-weight-bold">Сделать запрос</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!-- Тело модального окна -->
+      <div class="modal-body p-4">
+        <form action="{% url 'contact' %}" method="POST">
+          {% csrf_token %}
+
+          <!-- Скрытые поля -->
+          <input type="hidden" name="user_id" value="{% if user.is_authenticated %}{{ user.id }}{% else %}0{% endif %}">
+          <input type="hidden" name="realtor_email" value="{{ listing.realtor.email }}">
+          <input type="hidden" name="listing_id" value="{{ listing.id }}">
+
+          <!-- Поле недвижимости -->
+          <div class="form-group mb-4">
+            <label for="property_name" class="font-weight-bold mb-2">Недвижимость:</label>
+            <input type="text" name="listing" class="form-control border-primary rounded-lg"
+                   value="{{ listing.title }}" readonly>
+          </div>
+
+          <!-- Поле имени -->
+          <div class="form-group mb-4">
+            <label for="name" class="font-weight-bold mb-2">Имя:</label>
+            <input type="text" name="name" class="form-control border-primary rounded-lg"
+                   {% if user.is_authenticated %} value="{{ user.first_name }} {{ user.last_name }}" {% endif %}
+                   required>
+          </div>
+
+          <!-- Поле email -->
+          <div class="form-group mb-4">
+            <label for="email" class="font-weight-bold mb-2">Электронная почта:</label>
+            <input type="email" name="email" class="form-control border-primary rounded-lg"
+                   {% if user.is_authenticated %} value="{{ user.email }}" {% endif %}
+                   required>
+          </div>
+
+          <!-- Поле телефона -->
+          <div class="form-group mb-4">
+            <label for="phone" class="font-weight-bold mb-2">Телефон:</label>
+            <input type="text" name="phone" class="form-control border-primary rounded-lg">
+          </div>
+
+          <!-- Поле сообщения -->
+          <div class="form-group mb-4">
+            <label for="message" class="font-weight-bold mb-2">Сообщение:</label>
+            <textarea name="message" class="form-control border-primary rounded-lg" rows="4"></textarea>
+          </div>
+
+          <!-- Кнопка отправки -->
+          <div class="form-group mt-4">
+            <input type="submit" value="Отправить запрос"
+                   class="btn btn-primary btn-block py-2 rounded-lg font-weight-bold">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

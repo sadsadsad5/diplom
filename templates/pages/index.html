@@ -1,0 +1,289 @@
+{% extends 'base.html' %} 
+{% load humanize %}
+
+{% block title %} | Добро пожаловать {% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section position-relative overflow-hidden bg-dark text-white">
+<div class="hero-background" style="background-image: url('https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+  <div class="dark-overlay"></div>
+
+  <div class="container position-relative py-5" style="z-index: 2;">
+    <div class="row min-vh-80 align-items-center">
+      <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-3 fw-bold mb-4">Поиск недвижимости стал проще</h1>
+        <p class="lead fs-4 mb-5">
+          Найдите свой идеальный дом среди множества проверенных объявлений.
+          Наша интеллектуальная система подбора учитывает все ваши пожелания.
+        </p>
+
+        <!-- Search Form -->
+        <div class="card shadow-lg border-0 p-4 bg-white bg-opacity-10 backdrop-blur">
+          <form action="{% url 'search' %}" class="text-start">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <input type="text" name="keywords" class="form-control form-control-lg" placeholder="Ключевые слова...">
+              </div>
+              <div class="col-md-4">
+                <input type="text" name="city" class="form-control form-control-lg" placeholder="Город">
+              </div>
+              <div class="col-md-4">
+                <select name="state" class="form-select form-select-lg">
+                  <option selected disabled>Область (все)</option>
+                  {% for key,value in state_choices.items %}
+                    <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
+                <select name="bedrooms" class="form-select form-select-lg">
+                  <option selected disabled>Кол-во комнат</option>
+                  {% for key,value in bedroom_choices.items %}
+                    <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6">
+                <select name="price" class="form-select form-select-lg">
+                  <option selected disabled>Макс. цена</option>
+                  {% for key,value in price_choices.items %}
+                    <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary btn-lg w-100 py-3" type="submit">
+                  <i class="fas fa-search me-2"></i> Найти объявления
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Alerts -->
+{% include 'partials/_alerts.html' %}
+
+<!-- Latest Listings -->
+<section class="py-5 bg-light" id="listings">
+  <div class="container">
+    <div class="row justify-content-center mb-5">
+      <div class="col-lg-8 text-center">
+        <h2 class="display-5 fw-bold mb-3">Последние объявления</h2>
+        <p class="lead text-muted">Самые свежие предложения на рынке недвижимости</p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      {% if listings %}
+        {% for listing in listings %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card border-0 shadow-sm h-100 overflow-hidden">
+            <div class="position-relative">
+              <img src="{{ listing.photo_main.url }}" class="card-img-top" alt="{{ listing.title }}" style="height: 240px; object-fit: cover;">
+              <div class="position-absolute top-0 end-0 m-3">
+                <span class="badge bg-primary rounded-pill fs-6 p-2">${{ listing.price|intcomma }}</span>
+              </div>
+              <div class="position-absolute bottom-0 start-0 w-100 p-3 bg-dark bg-opacity-50 text-white">
+                <h5 class="mb-0">{{ listing.title }}</h5>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                <small>{{ listing.city }}, {{ listing.state }} </small>
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-bed text-muted me-2"></i>
+                    <span>{{ listing.bedrooms }} комн.</span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-bath text-muted me-2"></i>
+                    <span>{{ listing.bathrooms }} сануз.</span>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-th-large text-muted me-2"></i>
+                    <span>{{ listing.sqft }} м²</span>
+                  </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-car text-muted me-2"></i>
+                        <span>
+                            {% if listing.garage %}
+                                Есть
+                            {% else %}
+                                Нет
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-user-circle text-primary me-2"></i>
+                  <small>
+                    {% if listing.realtor %}
+                      {{ listing.realtor }}
+                    {% else %}
+                      {{ listing.user.first_name|default:listing.user.username }} {{ listing.user.last_name }}
+                    {% endif %}
+                  </small>
+                </div>
+                <small class="text-muted">
+                  <i class="fas fa-clock me-1"></i> {{ listing.list_date|timesince }}
+                </small>
+              </div>
+            </div>
+
+            <div class="card-footer bg-white border-0">
+              <a href="{% url 'listing' listing.id %}" class="btn btn-primary w-100">
+                Подробнее
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12">
+          <div class="alert alert-info text-center">В данный момент нет доступных объявлений</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="py-5" id="services">
+  <div class="container">
+    <div class="row justify-content-center mb-5">
+      <div class="col-lg-8 text-center">
+        <h2 class="display-5 fw-bold mb-3">Наши услуги</h2>
+        <p class="lead text-muted">Комплексные решения для ваших потребностей в недвижимости</p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center p-4">
+            <div class="icon-square bg-primary bg-opacity-10 text-primary rounded-3 p-3 mb-4 mx-auto">
+              <i class="fas fa-comment fa-2x"></i>
+            </div>
+            <h3 class="h5 mb-3">Консалтинговые услуги</h3>
+            <p class="text-muted">
+              Наши эксперты проведут анализ рынка и разработают индивидуальную стратегию.
+              20-летний опыт на рынке коммерческой и жилой недвижимости.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center p-4">
+            <div class="icon-square bg-primary bg-opacity-10 text-primary rounded-3 p-3 mb-4 mx-auto">
+              <i class="fas fa-home fa-2x"></i>
+            </div>
+            <h3 class="h5 mb-3">Управление недвижимостью</h3>
+            <p class="text-muted">
+              Профессиональное управление «под ключ». Более 95% клиентов отмечают рост доходности
+              объектов уже в первый год сотрудничества.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center p-4">
+            <div class="icon-square bg-primary bg-opacity-10 text-primary rounded-3 p-3 mb-4 mx-auto">
+              <i class="fas fa-suitcase fa-2x"></i>
+            </div>
+            <h3 class="h5 mb-3">Аренда и продажа</h3>
+            <p class="text-muted">
+              Эксклюзивные предложения коммерческой и элитной жилой недвижимости.
+              Гарантия юридической чистоты сделки.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Hero Section */
+  .hero-section {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    opacity: 0.8;
+  }
+
+  .dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 1;
+  }
+
+  .backdrop-blur {
+    backdrop-filter: blur(10px);
+  }
+
+  /* Cards */
+  .card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  }
+
+  /* Icons */
+  .icon-square {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+  }
+
+  /* Form Elements */
+  .form-control, .form-select {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+  }
+</style>
+{% endblock %}

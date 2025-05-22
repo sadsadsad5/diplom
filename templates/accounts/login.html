@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %} | Вход в аккаунт {% endblock %}
+
+{% block content %}
+<section id="login" class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-header bg-primary text-white text-center rounded-top-4">
+            <h4 class="mb-0">
+              <i class="fas fa-sign-in-alt me-2"></i>Вход в аккаунт
+            </h4>
+          </div>
+          <div class="card-body p-4">
+            {% include 'partials/_alerts.html' %}
+
+            <form action="{% url 'login' %}" method="POST" class="needs-validation" novalidate>
+              {% csrf_token %}
+
+              <!-- Имя пользователя -->
+              <div class="mb-3">
+                <label for="username" class="form-label fw-semibold">
+                  <i class="fas fa-user me-2 text-secondary"></i>Имя пользователя
+                </label>
+                <input type="text" name="username" id="username" class="form-control rounded-3" required>
+              </div>
+
+              <!-- Пароль -->
+              <div class="mb-3">
+                <label for="password" class="form-label fw-semibold">
+                  <i class="fas fa-lock me-2 text-secondary"></i>Пароль
+                </label>
+                <div class="input-group">
+                  <input type="password" name="password" id="password" class="form-control rounded-start-3" required>
+                  <button type="button" class="btn btn-outline-secondary rounded-end-3" id="togglePassword">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Кнопка входа -->
+              <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary btn-lg rounded-3">
+                  <i class="fas fa-sign-in-alt me-2"></i>Войти
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="card-footer text-center bg-white border-0">
+            <small class="text-muted">Нет аккаунта? <a href="{% url 'register' %}">Зарегистрируйтесь</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JS: Показать/скрыть пароль -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordField = document.getElementById('password');
+    togglePassword.addEventListener('click', function () {
+      const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordField.setAttribute('type', type);
+      this.querySelector('i').classList.toggle('fa-eye');
+      this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+  });
+</script>
+<style>
+  body {
+  background-color: #f8f9fa;
+}
+</style>
+{% endblock %}

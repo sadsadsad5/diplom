@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Личный кабинет | Timur Company{% endblock %}
+
+{% block content %}
+<!-- Шапка с градиентом -->
+<section class="dashboard-header py-5 text-white" style="background: rgba(32, 134, 107, 0.8);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4 fw-bold mb-3">Личный кабинет</h1>
+                <p class="lead mb-4">Управляйте вашими объявлениями в Timur Company</p>
+                <div class="d-flex flex-wrap" style="gap: 1.5rem;">  <!-- Еще больше расстояние -->
+                    <a href="{% url 'create_listing' %}" class="btn btn-outline-light btn-lg px-4 rounded-3 shadow-sm">
+                        <i class="fas fa-circle-plus me-2"></i> Добавить объявление
+                    </a>
+                    <a href="{% url 'user_listing' %}" class="btn btn-outline-light btn-lg px-4 rounded-3 shadow-sm">
+                        <i class="far fa-rectangle-list me-2"></i> Мои объявления
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Хлебные крошки -->
+<nav class="breadcrumb-container py-3" aria-label="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'index' %}"><i class="fas fa-home"></i> Главная</a>
+            </li>
+            <li class="breadcrumb-item active">Личный кабинет</li>
+        </ol>
+    </div>
+</nav>
+
+<!-- Уведомления -->
+{% include 'partials/_alerts.html' %}
+
+<!-- Основной контент -->
+<section class="dashboard-content py-5">
+    <div class="container">
+        {% if contacts %}
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-header bg-white border-0 py-3">
+                <h3 class="mb-0">
+                    <i class="fas fa-envelope-open-text text-primary me-2"></i>
+                    Запросы по вашим объявлениям
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="50">#</th>
+                                <th>Объявление</th>
+                                <th width="150">Дата запроса</th>
+                                <th width="120">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contact in contacts %}
+                            <tr>
+                                <td class="fw-semibold text-muted">{{ forloop.counter }}</td>
+                                <td>
+                                    <a href="{% url 'listing' contact.listing_id %}" class="text-decoration-none d-flex align-items-center">
+                                        {% if contact.listing.photo_main %}
+                                        <img src="{{ contact.listing.photo_main.url }}" class="rounded me-3" width="50" height="50" style="object-fit: cover;">
+                                        {% endif %}
+                                        <div>
+                                            <h6 class="mb-0">{{ contact.listing.title|truncatechars:40 }}</h6>
+                                            <small class="text-muted">{{ contact.listing.address|truncatechars:30 }}</small>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td class="text-muted small">{{ contact.contact_date|date:"d.m.Y" }}</td>
+                                <td>
+                                    <a href="{% url 'listing' contact.listing_id %}" class="btn btn-sm btn-outline-primary w-100">
+                                        <i class="fas fa-eye me-1"></i> Просмотр
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Пустое состояние -->
+        <div class="empty-state text-center py-5">
+            <img src="{% static 'img/empty-dashboard.svg' %}" alt="Нет данных" class="img-fluid mb-4" style="max-height: 200px;">
+            <h3 class="text-muted mb-3">У вас пока нет активных объявлений</h3>
+            <p class="text-muted mb-4">Создайте первое объявление и начните получать запросы от покупателей</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'create_listing' %}" class="btn btn-primary btn-lg px-4">
+                    <i class="fas fa-plus-circle me-2"></i> Создать объявление
+                </a>
+                <a href="{% url 'listings' %}" class="btn btn-outline-secondary btn-lg px-4">
+                    <i class="fas fa-search me-2"></i> Найти недвижимость
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</section>
+
+<style>
+    /* Основные стили */
+    .dashboard-header {
+        margin-bottom: 30px;
+    }
+
+    .dashboard-content {
+        background-color: #fff;
+    }
+
+    /* Карточки */
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Таблица */
+    .table th {
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        border-top: none;
+    }
+
+    /* Кнопки */
+    .btn-primary {
+        background-color: #10284e;
+        border: none;
+        transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #0a1a36;
+        transform: translateY(-2px);
+    }
+
+    /* Адаптация */
+    @media (max-width: 768px) {
+        .dashboard-header {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .table-responsive {
+            border: none;
+        }
+
+        .btn-lg {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+        }
+    }
+
+</style>
+{% endblock %}

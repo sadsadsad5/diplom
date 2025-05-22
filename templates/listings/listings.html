@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %} | Объекты недвижимости {% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-dark text-white position-relative">
+    <div class="hero-background" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+  <div class="dark-overlay"></div>
+
+  <div class="container position-relative" style="z-index: 2; padding: 8rem 0;">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 text-center">
+        <h1 class="display-3 fw-bold mb-4">Наши объекты недвижимости</h1>
+        <p class="lead fs-4 mb-5">
+          Откройте для себя лучшие предложения на рынке недвижимости
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sort Section -->
+<section class="py-3 bg-white">
+  <div class="container">
+    <div class="row justify-content-start">
+      <div class="col-md-6 col-lg-4">
+        <div class="sort-wrapper bg-light rounded-pill p-1 shadow-sm">
+          <div class="d-flex align-items-center">
+            <span class="sort-icon px-3">
+              <i class="fas fa-sort-amount-down-alt text-primary"></i>
+            </span>
+            <select id="sort" class="form-select border-0 bg-transparent shadow-none">
+              <option value="newest">По новизне</option>
+              <option value="price_asc">Сначала дешевле</option>
+              <option value="price_desc">Сначала дороже</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Listings Section -->
+<section id="listings" class="py-5 bg-light">
+  <div class="container">
+    {% if listings %}
+    <div class="row g-4">
+      {% for listing in listings %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow-sm h-100 overflow-hidden transition-all">
+          <div class="position-relative">
+            <img src="{{ listing.photo_main.url }}" class="card-img-top listing-image" alt="{{ listing.title }}">
+            <div class="position-absolute top-0 end-0 m-3">
+              <span class="badge bg-primary rounded-pill fs-5 p-2">${{ listing.price|intcomma }}</span>
+            </div>
+            <div class="position-absolute bottom-0 start-0 w-100 p-3 bg-dark bg-opacity-50 text-white">
+              <h5 class="mb-0">{{ listing.title }}</h5>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <i class="fas fa-map-marker-alt text-primary me-2"></i>
+              <small>{{ listing.city }}, {{ listing.state }}</small>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-bed text-muted me-2"></i>
+                  <span>{{ listing.bedrooms }} комн.</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-bath text-muted me-2"></i>
+                  <span>{{ listing.bathrooms }} сануз.</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-th-large text-muted me-2"></i>
+                  <span>{{ listing.sqft }} м²</span>
+                </div>
+              </div>
+              <div class="col-6">
+                  <div class="d-flex align-items-center">
+                      <i class="fas fa-car text-muted me-2"></i>
+                      <span>
+                          {% if listing.garage %}
+                              Есть
+                          {% else %}
+                              Нет
+                          {% endif %}
+                      </span>
+                  </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center border-top pt-3">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-user-circle text-primary me-2"></i>
+                <small>
+                  {% if listing.realtor %}
+                    {{ listing.realtor }}
+                  {% else %}
+                    {{ listing.user.get_full_name|default:listing.user.username }}
+                  {% endif %}
+                </small>
+              </div>
+              <small class="text-muted">
+                <i class="fas fa-clock me-1"></i> {{ listing.list_date|timesince }}
+              </small>
+            </div>
+          </div>
+
+          <div class="card-footer bg-white border-0">
+            <a href="{% url 'listing' listing.id %}" class="btn btn-primary w-100 py-2">
+              <i class="fas fa-search me-1"></i> Подробнее
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="col-12">
+      <div class="alert alert-info text-center py-4">
+        <i class="fas fa-info-circle fa-2x mb-3"></i>
+        <h4>В данный момент нет доступных объявлений</h4>
+        <p class="mb-0">Пожалуйста, проверьте позже</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Pagination -->
+    {% if listings.has_other_pages %}
+    <div class="row mt-5">
+      <div class="col-12">
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            {% if listings.has_previous %}
+              <li class="page-item">
+                <a href="?page={{ listings.previous_page_number }}&sort={{ request.GET.sort|default:'-list_date' }}"
+                   class="page-link"
+                   aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&laquo;</span>
+              </li>
+            {% endif %}
+
+            {% for i in listings.paginator.page_range %}
+              {% if listings.number == i %}
+                <li class="page-item active">
+                  <span class="page-link">{{ i }}</span>
+                </li>
+              {% else %}
+                <li class="page-item">
+                  <a href="?page={{ i }}&sort={{ request.GET.sort|default:'-list_date' }}"
+                     class="page-link">{{ i }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+
+            {% if listings.has_next %}
+              <li class="page-item">
+                <a href="?page={{ listings.next_page_number }}&sort={{ request.GET.sort|default:'-list_date' }}"
+                   class="page-link"
+                   aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&raquo;</span>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  /* Hero Section */
+  .hero-section {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    opacity: 0.8;
+  }
+
+  .dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 1;
+  }
+
+  /* Cards */
+  .card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  }
+
+  .listing-image {
+    height: 240px;
+    object-fit: cover;
+  }
+
+  /* Transition */
+  .transition-all {
+    transition: all 0.3s ease;
+  }
+
+  /* Filter buttons */
+  .btn-outline-primary {
+    border-width: 2px;
+  }
+
+    .sort-wrapper {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .sort-wrapper:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+  }
+
+  .sort-icon {
+    font-size: 1.1rem;
+  }
+
+  #sort {
+    cursor: pointer;
+    background-image: none;
+    padding: 0.5rem 1rem;
+    appearance: none;
+  }
+
+  #sort:focus {
+    box-shadow: none;
+  }
+</style>
+{% endblock %}

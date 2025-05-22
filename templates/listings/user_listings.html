@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Мои объявления{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Заголовок и кнопка добавления -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-home text-primary me-2"></i>Мои объявления
+        </h2>
+        <a href="{% url 'create_listing' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Добавить
+        </a>
+    </div>
+
+    <!-- Список объявлений -->
+    {% if listings %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for listing in listings %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <!-- Статус -->
+                <div class="position-absolute top-0 end-0 m-2">
+                    <span class="badge {% if listing.is_published %}bg-success{% else %}bg-secondary{% endif %}">
+                        {% if listing.is_published %}Опубликовано{% else %}На модерации{% endif %}
+                    </span>
+                </div>
+
+                <!-- Изображение -->
+                {% if listing.photo_main %}
+                <img src="{{ listing.photo_main.url }}" class="card-img-top" alt="{{ listing.title }}" style="height: 180px; object-fit: cover;">
+                {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
+                    <i class="fas fa-home fa-3x text-muted"></i>
+                </div>
+                {% endif %}
+
+                <!-- Детали -->
+                <div class="card-body">
+                    <h5 class="card-title">{{ listing.title }}</h5>
+                    <p class="card-text text-muted small mb-2">
+                        <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                        {{ listing.city }}, {{ listing.state }} область
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 text-primary mb-0">${{ listing.price }}</span>
+                        <div class="d-flex">
+                            <a href="{% url 'listing' listing.id %}" class="btn btn-outline-primary btn-sm px-3">
+                                <i class="fas fa-eye me-1"></i> Просмотр
+                            </a>
+                            <div class="border-start mx-2"></div>  <!-- Вертикальный разделитель -->
+                            <form action="{% url 'delete_listing' listing.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-3"
+                                        onclick="return confirm('Вы уверены, что хотите удалить это объявление?')">
+                                    <i class="fas fa-trash me-1"></i> Удалить
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Пустое состояние -->
+    <div class="text-center py-5">
+        <img src="{% static 'img/empty.svg' %}" alt="Нет объявлений" class="img-fluid mb-4" style="max-height: 200px;">
+        <h4 class="text-muted mb-3">У вас нет объявлений</h4>
+        <p class="text-muted mb-4">Создайте первое объявление и начните продавать</p>
+        <a href="{% url 'create_listing' %}" class="btn btn-primary px-4">
+            <i class="fas fa-plus me-2"></i>Создать объявление
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.35em 0.65em;
+    }
+    .btn-group-sm .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}

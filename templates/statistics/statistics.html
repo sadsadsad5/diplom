@@ -1,0 +1,438 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Статистика недвижимости{% endblock %}
+
+{% block content %}
+<section class="statistics-section bg-light py-5">
+  <div class="container">
+    <!-- Заголовок -->
+    <div class="text-center mb-5">
+      <h1 class="display-4 fw-bold text-primary">
+        <i class="fas fa-chart-line me-2"></i>Аналитика недвижимости
+      </h1>
+      <p class="lead text-muted">Ключевые метрики и тенденции рынка</p>
+    </div>
+
+      <!-- Основные метрики -->
+      <div class="row g-4 mb-5">
+        <!-- Карточка 1 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card stat-card shadow-sm border-0 h-100">
+            <div class="card-body text-center p-4">
+              <div class="stat-icon bg-primary bg-opacity-10 text-primary mb-3">
+                <i class="fas fa-home fa-2x"></i>
+              </div>
+              <h2 class="stat-value fw-bold">{{ total_listings|intcomma }}</h2>
+              <p class="stat-label text-muted mb-0">Всего объявлений</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Карточка 2 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card stat-card shadow-sm border-0 h-100">
+            <div class="card-body text-center p-4">
+              <div class="stat-icon bg-success bg-opacity-10 text-success mb-3">
+                <i class="fas fa-dollar-sign fa-2x"></i>
+              </div>
+              <h2 class="stat-value fw-bold">${{ avg_price|floatformat:"0"|intcomma }}</h2>
+              <p class="stat-label text-muted mb-0">Средняя цена</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Карточка 3 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card stat-card shadow-sm border-0 h-100">
+            <div class="card-body text-center p-4">
+              <div class="stat-icon bg-info bg-opacity-10 text-info mb-3">
+                <i class="fas fa-users fa-2x"></i>
+              </div>
+              <h2 class="stat-value fw-bold">{{ active_clients }}</h2>
+              <p class="stat-label text-muted mb-0">Активных клиентов</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Карточка 4 -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card stat-card shadow-sm border-0 h-100">
+            <div class="card-body text-center p-4">
+              <div class="stat-icon bg-warning bg-opacity-10 text-warning mb-3">
+                <i class="fas fa-handshake fa-2x"></i>
+              </div>
+              <h2 class="stat-value fw-bold">{{ monthly_deals }}</h2>
+              <p class="stat-label text-muted mb-0">Сделок за месяц</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Графики и диаграммы -->
+    <div class="row g-4 mb-5">
+      <!-- График динамики цен -->
+      <div class="col-lg-8">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-header bg-white border-0">
+            <h3 class="mb-0">
+              <i class="fas fa-chart-bar text-primary me-2"></i>Динамика цен по месяцам
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="height: 300px;">
+              <!-- Здесь будет график -->
+              <img src="https://via.placeholder.com/800x300?text=Price+Dynamics+Chart"
+                   alt="Динамика цен" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!-- Круговые диаграммы -->
+<div class="col-lg-4">
+  <div class="card shadow-sm border-0 h-100">
+    <div class="card-header bg-white border-0">
+      <h3 class="mb-0">
+        <i class="fas fa-chart-pie text-primary me-2"></i>Распределение по количеству комнат
+      </h3>
+    </div>
+    <div class="card-body">
+      <div class="chart-container" style="height: 300px;">
+        <!-- Canvas для диаграммы будет добавлен скриптом -->
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Дополнительные метрики -->
+    <div class="row g-4">
+      <!-- Топ регионов -->
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-header bg-white border-0">
+            <h3 class="mb-0">
+              <i class="fas fa-map-marked-alt text-primary me-2"></i>Популярные регионы
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Регион</th>
+                    <th class="text-end">Объявлений</th>
+                    <th class="text-end">Средняя цена</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {% for region in regions %}
+                  <tr>
+                    <td>{{ region.state }}</td>
+                    <td class="text-end">{{ region.count }}</td>
+                    <td class="text-end">${{ region.avg_price|floatformat:"0"|intcomma }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+<div class="col-md-6">
+  <div class="card shadow-sm border-0 h-100">
+    <div class="card-header bg-white border-0">
+      <h3 class="mb-0">
+        <i class="fas fa-calculator text-primary me-2"></i>Ипотечный калькулятор
+      </h3>
+    </div>
+    <div class="card-body">
+      <form id="mortgage-calculator">
+        <!-- Стоимость жилья -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold d-flex align-items-center">
+            <i class="fas fa-home text-primary me-2"></i>Стоимость жилья
+          </label>
+          <input type="range" class="form-range" id="property-price" min="50000" max="500000" step="10000" value="250000">
+          <div class="d-flex justify-content-between mt-1">
+            <small class="text-muted">50,000</small>
+            <small class="text-muted">500,000</small>
+          </div>
+          <div class="input-group mt-2">
+            <input type="number" class="form-control text-end" id="price-input" value="250000">
+            <span class="input-group-text">$</span>
+          </div>
+        </div>
+
+        <!-- Первоначальный взнос -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold d-flex align-items-center">
+            <i class="fas fa-hand-holding-usd text-primary me-2"></i>Первоначальный взнос
+          </label>
+          <div class="input-group">
+            <input type="number" class="form-control text-end" id="down-payment-percent" value="20" min="10" max="90">
+            <span class="input-group-text">%</span>
+            <input type="number" class="form-control text-end" id="down-payment-amount" readonly>
+            <span class="input-group-text">$</span>
+          </div>
+          <input type="range" class="form-range mt-2" id="down-payment-slider" min="10" max="90" value="20">
+        </div>
+
+        <!-- Срок кредита -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold d-flex align-items-center">
+            <i class="fas fa-calendar-alt text-primary me-2"></i>Срок кредита
+          </label>
+          <select class="form-select" id="loan-term">
+            <option value="5">5 лет</option>
+            <option value="10" selected>10 лет</option>
+            <option value="15">15 лет</option>
+            <option value="20">20 лет</option>
+          </select>
+        </div>
+
+        <!-- Процентная ставка -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold d-flex align-items-center">
+            <i class="fas fa-percent text-primary me-2"></i>Процентная ставка
+          </label>
+          <div class="input-group">
+            <input type="number" class="form-control text-end" id="interest-rate" value="9.5" step="0.1" min="5" max="15">
+            <span class="input-group-text">%</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary w-100 py-2 mb-3" id="calculate-btn">
+          <i class="fas fa-calculator me-2"></i>Рассчитать платеж
+        </button>
+
+        <!-- Результаты расчета -->
+        <div class="alert alert-primary bg-opacity-10 border-0" id="result-container" style="display: none;">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="d-flex align-items-center">
+              <i class="fas fa-calendar-check text-primary me-2"></i>Ежемесячный платеж:
+            </span>
+            <strong id="monthly-payment">0 $</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="d-flex align-items-center">
+              <i class="fas fa-money-bill-wave text-primary me-2"></i>Сумма кредита:
+            </span>
+            <strong id="loan-amount">0 $</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="d-flex align-items-center">
+              <i class="fas fa-coins text-primary me-2"></i>Переплата:
+            </span>
+            <strong id="total-interest">0 $</strong>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+  <!-- Подключаем Chart.js и инициализируем графики -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // График динамики цен
+    const priceCtx = document.createElement('canvas');
+    document.querySelector('.chart-container').appendChild(priceCtx);
+
+    new Chart(priceCtx, {
+      type: 'line',
+      data: {
+        labels: {{ months|safe }},
+        datasets: [{
+          label: 'Средняя цена',
+          data: {{ avg_prices|safe }},
+          borderColor: '#0d6efd',
+          backgroundColor: 'rgba(13, 110, 253, 0.1)',
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+    // Круговая диаграмма распределения по спальням
+  const pieCtx = document.createElement('canvas');
+  document.querySelectorAll('.chart-container')[1].appendChild(pieCtx);
+
+  new Chart(pieCtx, {
+    type: 'pie',
+    data: {
+      labels: {{ bedroom_labels|safe }},
+      datasets: [{
+        data: {{ bedroom_data|safe }},
+        backgroundColor: {{ bedroom_colors|safe }},
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.raw || 0;
+              const total = context.dataset.data.reduce((a, b) => a + b, 0);
+              const percentage = Math.round((value / total) * 100);
+              return `${label}: ${value} (${percentage}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+  // Элементы формы
+  const priceSlider = document.getElementById('property-price');
+  const priceInput = document.getElementById('price-input');
+  const downPaymentPercent = document.getElementById('down-payment-percent');
+  const downPaymentAmount = document.getElementById('down-payment-amount');
+  const downPaymentSlider = document.getElementById('down-payment-slider');
+  const loanTerm = document.getElementById('loan-term');
+  const interestRate = document.getElementById('interest-rate');
+  const calculateBtn = document.getElementById('calculate-btn');
+  const resultContainer = document.getElementById('result-container');
+
+  // Синхронизация полей
+  priceSlider.addEventListener('input', function() {
+    priceInput.value = this.value;
+    updateDownPayment();
+  });
+
+  priceInput.addEventListener('input', function() {
+    priceSlider.value = this.value;
+    updateDownPayment();
+  });
+
+  downPaymentPercent.addEventListener('input', function() {
+    downPaymentSlider.value = this.value;
+    updateDownPayment();
+  });
+
+  downPaymentSlider.addEventListener('input', function() {
+    downPaymentPercent.value = this.value;
+    updateDownPayment();
+  });
+
+  // Обновление суммы первоначального взноса
+  function updateDownPayment() {
+    const price = parseFloat(priceInput.value) || 0;
+    const percent = parseFloat(downPaymentPercent.value) || 0;
+    const amount = (price * percent / 100).toFixed(0);
+    downPaymentAmount.value = amount;
+  }
+
+  // Расчет ипотеки
+  calculateBtn.addEventListener('click', function() {
+    const price = parseFloat(priceInput.value) || 0;
+    const percent = parseFloat(downPaymentPercent.value) || 0;
+    const downPayment = (price * percent / 100);
+    const loanAmount = price - downPayment;
+    const termYears = parseInt(loanTerm.value) || 10;
+    const rate = parseFloat(interestRate.value) / 100 || 0.095;
+
+    // Расчет аннуитетного платежа
+    const monthlyRate = rate / 12;
+    const termMonths = termYears * 12;
+    const monthlyPayment = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, termMonths) /
+                         (Math.pow(1 + monthlyRate, termMonths) - 1);
+
+    const totalInterest = (monthlyPayment * termMonths) - loanAmount;
+
+    // Отображение результатов
+    document.getElementById('monthly-payment').textContent =
+      monthlyPayment.toFixed(0) + ' BYN';
+    document.getElementById('loan-amount').textContent =
+      loanAmount.toFixed(0) + ' BYN';
+    document.getElementById('total-interest').textContent =
+      totalInterest.toFixed(0) + ' BYN';
+
+    resultContainer.style.display = 'block';
+  });
+
+  // Инициализация
+  updateDownPayment();
+});
+  </script>
+</section>
+
+<style>
+  /* Стили для страницы статистики */
+  .stat-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    margin: 0.5rem 0;
+  }
+
+  .activity-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chart-container {
+    position: relative;
+  }
+
+   /* Дополнительные стили для калькулятора */
+  #mortgage-calculator .form-range::-webkit-slider-thumb {
+    background: var(--bs-success);
+  }
+
+  #mortgage-calculator .form-range::-moz-range-thumb {
+    background: var(--bs-success);
+  }
+
+  #mortgage-calculator .input-group-text {
+    background-color: #f8f9fa;
+  }
+
+  #result-container strong {
+    color: var(--bs-success);
+    font-weight: 600;
+  }
+
+
+</style>
+
+{% endblock %}

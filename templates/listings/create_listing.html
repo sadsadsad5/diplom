@@ -1,0 +1,656 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <!-- Заголовок формы -->
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center my-2">
+                        <i class="fas fa-home me-2"></i>    Добавить новое объявление
+                    </h2>
+                </div>
+
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Блок информации о пользователе -->
+                        <div class="user-info mb-4 p-3 bg-light rounded">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-user-circle fa-3x text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h5 class="mb-1">   {{ user.get_full_name|default:user.username }}</h5>
+                                    <small class="text-muted">  Ваше объявление будет опубликовано от этого имени</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Основная информация -->
+                        <div class="section-block mb-4">
+                            <h4 class="section-title mb-3">
+                                <i class="fas fa-info-circle me-2 text-primary"></i>    Основная информация
+                            </h4>
+                            <div class="row g-3">
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="{{ form.title.id_for_label }}" class="form-label me-3" style="min-width: 150px;">
+                                        <strong>Название:</strong>
+                                    </label>
+                                    {{ form.title }}
+                                </div>
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="{{ form.address.id_for_label }}" class="form-label me-3" style="min-width: 150px;">
+                                        <strong>Адрес:</strong>
+                                    </label>
+                                    {{ form.address }}
+                                </div>
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="{{ form.city.id_for_label }}" class="form-label me-3" style="min-width: 150px;">
+                                        <strong>Город :</strong>
+                                    </label>
+                                    {{ form.city }}
+                                </div>
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="{{ form.state.id_for_label }}" class="form-label me-3" style="min-width: 150px;">
+                                        <strong>Область :</strong>
+                                    </label>
+                                    {{ form.state }}
+                                </div>
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="{{ form.zipcode.id_for_label }}" class="form-label me-3" style="min-width: 150px;">
+                                        <strong>Год постройки :</strong>
+                                    </label>
+                                    {{ form.zipcode }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Описание -->
+                        <div class="section-block mb-4">
+                            <h4 class="section-title mb-3">
+                                <i class="fas fa-align-left me-2 text-primary"></i> Описание
+                            </h4>
+                            <div class="mb-3">
+                                <label for="id_description" class="form-label"><strong>Подробное описание</strong></label>
+                                {{ form.description }}
+                            </div>
+                            <div class="form-text text-muted">Опишите особенности недвижимости</div>
+                        </div>
+
+
+                       <!-- Характеристики -->
+                        <div class="section-block mb-4">
+                            <h4 class="section-title mb-3">
+                                <i class="fas fa-ruler-combined me-2 text-primary"></i> Характеристики
+                            </h4>
+                            <div class="row g-3">
+                                <!-- Цена -->
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="id_price" class="form-label me-3" style="min-width: 150px;"><strong>Цена :</strong></label>
+                                    {{ form.price }}
+                                </div>
+
+                                <!-- Комнат -->
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="id_bedrooms" class="form-label me-3" style="min-width: 150px;"><strong>Комнат :</strong></label>
+                                     {{ form.bedrooms }}
+                                </div>
+
+                                <!-- Ванные -->
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="id_bathrooms" class="form-label me-3" style="min-width: 150px;"><strong>Ванные :</strong></label>
+                                     {{ form.bathrooms }}
+                                </div>
+
+                                <!-- Гараж -->
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="id_garage" class="form-label me-3" style="min-width: 150px;"><strong>Гараж :</strong></label>
+                                     {{ form.garage }}
+                                </div>
+
+                                <!-- Площадь -->
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="id_sqft" class="form-label me-3" style="min-width: 150px;"><strong>Площадь (м²) :</strong></label>
+                                    {{ form.sqft }}
+                                </div>
+
+                                <!-- Площадь участка -->
+                                <div class="col-12 mb-3 d-flex align-items-center">
+                                    <label for="id_lot_size" class="form-label me-3" style="min-width: 150px;"><strong>Площадь участка (соток):</strong></label>
+                                     {{ form.lot_size }}
+                                </div>
+                            </div>
+                        </div>
+
+                       <!-- Фотографии -->
+                        <div class="section-block mb-4">
+                            <h4 class="section-title mb-3">
+                                <i class="fas fa-camera me-2 text-primary"></i> Фотографии
+                            </h4>
+                            <div class="row g-3">
+                                <!-- Главное фото -->
+                                <div class="col-12 mb-4">
+                                    <div class="photo-upload-card p-3 border rounded-3">
+                                        <label class="form-label mb-3"><strong>Главное фото</strong></label>
+                                        {% if form.instance.photo_main %}
+                                        <div class="current-photo mb-3">
+                                            <img src="{{ form.instance.photo_main.url }}" class="img-thumbnail rounded-3 d-block" style="max-height: 200px;">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" name="photo_main-clear" id="photo_main-clear">
+                                                <label class="form-check-label" for="photo_main-clear">Удалить текущее фото</label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="file-upload-wrapper">
+                                            {{ form.photo_main }}
+                                            <label for="id_photo_main" class="file-upload-label rounded-pill">
+                                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                                <span class="file-upload-text">Выберите файл</span>
+                                            </label>
+                                            <div class="form-text mt-2">Рекомендуемый размер: 1200x800px</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Дополнительные фото (1-5) -->
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="photo-upload-card p-3 border rounded-3 h-100">
+                                        <label class="form-label mb-3"><strong>Фото 1 (необязательно)</strong></label>
+                                        {% if form.instance.photo_1 %}
+                                        <div class="current-photo mb-3">
+                                            <img src="{{ form.instance.photo_1.url }}" class="img-thumbnail rounded-3 d-block" style="max-height: 150px;">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" name="photo_1-clear" id="photo_1-clear">
+                                                <label class="form-check-label" for="photo_1-clear">Удалить</label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="file-upload-wrapper">
+                                            {{ form.photo_1 }}
+                                            <label for="id_photo_1" class="file-upload-label rounded-pill">
+                                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                                <span class="file-upload-text">Выберите файл</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Повторите блок для photo_2, photo_3, photo_4, photo_5 -->
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="photo-upload-card p-3 border rounded-3 h-100">
+                                        <label class="form-label mb-3"><strong>Фото 2 (необязательно)</strong></label>
+                                        {% if form.instance.photo_2 %}
+                                        <div class="current-photo mb-3">
+                                            <img src="{{ form.instance.photo_2.url }}" class="img-thumbnail rounded-3 d-block" style="max-height: 150px;">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" name="photo_2-clear" id="photo_2-clear">
+                                                <label class="form-check-label" for="photo_2-clear">Удалить</label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="file-upload-wrapper">
+                                            {{ form.photo_2 }}
+                                            <label for="id_photo_2" class="file-upload-label rounded-pill">
+                                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                                <span class="file-upload-text">Выберите файл</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="photo-upload-card p-3 border rounded-3 h-100">
+                                        <label class="form-label mb-3"><strong>Фото 3 (необязательно)</strong></label>
+                                        {% if form.instance.photo_3 %}
+                                        <div class="current-photo mb-3">
+                                            <img src="{{ form.instance.photo_3.url }}" class="img-thumbnail rounded-3 d-block" style="max-height: 150px;">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" name="photo_3-clear" id="photo_3-clear">
+                                                <label class="form-check-label" for="photo_3-clear">Удалить</label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="file-upload-wrapper">
+                                            {{ form.photo_3 }}
+                                            <label for="id_photo_3" class="file-upload-label rounded-pill">
+                                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                                <span class="file-upload-text">Выберите файл</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="photo-upload-card p-3 border rounded-3 h-100">
+                                        <label class="form-label mb-3"><strong>Фото 4 (необязательно)</strong></label>
+                                        {% if form.instance.photo_4 %}
+                                        <div class="current-photo mb-3">
+                                            <img src="{{ form.instance.photo_4.url }}" class="img-thumbnail rounded-3 d-block" style="max-height: 150px;">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" name="photo_4-clear" id="photo_4-clear">
+                                                <label class="form-check-label" for="photo_4-clear">Удалить</label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="file-upload-wrapper">
+                                            {{ form.photo_4 }}
+                                            <label for="id_photo_4" class="file-upload-label rounded-pill">
+                                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                                <span class="file-upload-text">Выберите файл</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="photo-upload-card p-3 border rounded-3 h-100">
+                                        <label class="form-label mb-3"><strong>Фото 5 (необязательно)</strong></label>
+                                        {% if form.instance.photo_5 %}
+                                        <div class="current-photo mb-3">
+                                            <img src="{{ form.instance.photo_5.url }}" class="img-thumbnail rounded-3 d-block" style="max-height: 150px;">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" name="photo_5-clear" id="photo_5-clear">
+                                                <label class="form-check-label" for="photo_5-clear">Удалить</label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="file-upload-wrapper">
+                                            {{ form.photo_5 }}
+                                            <label for="id_photo_5" class="file-upload-label rounded-pill">
+                                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                                <span class="file-upload-text">Выберите файл</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="photo-upload-card p-3 border rounded-3 h-100">
+                                        <label class="form-label mb-3"><strong>Фото 6 (необязательно)</strong></label>
+                                        {% if form.instance.photo_6 %}
+                                        <div class="current-photo mb-3">
+                                            <img src="{{ form.instance.photo_6.url }}" class="img-thumbnail rounded-3 d-block" style="max-height: 150px;">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" name="photo_6-clear" id="photo_6-clear">
+                                                <label class="form-check-label" for="photo_6-clear">Удалить</label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="file-upload-wrapper">
+                                            {{ form.photo_6 }}
+                                            <label for="id_photo_6" class="file-upload-label rounded-pill">
+                                                <i class="fas fa-cloud-upload-alt me-2"></i>
+                                                <span class="file-upload-text">Выберите файл</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Добавьте аналогичные блоки для photo_3, photo_4, photo_5 -->
+                            </div>
+</div>
+
+
+
+                        <!-- Кнопки отправки -->
+                            <div class="d-flex justify-content-between mt-5">
+                                <!-- Кнопка "Отмена" с анимацией при наведении -->
+                                <a href="{% url 'listings' %}" class="btn btn-cancel px-4 py-2">
+                                    <i class="fas fa-times me-2"></i>
+                                    <span class="btn-text">Отмена</span>
+                                    <span class="btn-hover-effect"></span>
+                                </a>
+
+                                <!-- Кнопка "Сохранить" с эффектом нажатия -->
+                                <button type="submit" class="btn btn-save px-4 py-2">
+                                    <i class="fas fa-save me-2"></i>
+                                    <span class="btn-text">Сохранить объявление</span>
+                                    <span class="btn-hover-effect"></span>
+                                    <span class="btn-click-effect"></span>
+                                </button>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if form.errors %}
+<div class="alert alert-danger">
+    <strong>Ошибка!</strong> Пожалуйста, исправьте следующие ошибки:
+    <ul>
+    {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+            <li>{{ field|title }}: {{ error }}</li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+<style>
+    /* Основные стили формы */
+    .card {
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+        padding: 1.5rem;
+    }
+
+    .section-block {
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        border-left: 4px solid #0d6efd;
+    }
+
+    .section-title {
+        color: #0d6efd;
+        font-weight: 600;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    /* Стили для загрузки файлов */
+    .photo-upload-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px dashed #adb5bd;
+        height: 100%;
+    }
+
+    .file-upload-wrapper {
+        position: relative;
+        margin-top: 0.5rem;
+    }
+
+    .file-upload-wrapper input[type="file"] {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .file-upload-label {
+        display: block;
+        padding: 1rem;
+        text-align: center;
+        background: #f8f9fa;
+        border-radius: 0.25rem;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s;
+    }
+
+    .file-upload-label:hover {
+        background: #e9ecef;
+    }
+
+    .file-upload-text {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .current-photo img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.25rem;
+    }
+
+    /* Валидация формы */
+    .is-invalid ~ .invalid-feedback {
+        display: block;
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .card-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .section-block {
+            padding: 1rem;
+        }
+    }
+        /* Стили для загрузки фото */
+    .photo-upload-card {
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+
+    .photo-upload-card:hover {
+        background: #e9ecef;
+    }
+
+    .file-upload-label {
+        display: block;
+        padding: 0.6rem 1.2rem;
+        text-align: center;
+        background: #f8f9fa;
+        border: 1px dashed #adb5bd;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .file-upload-label:hover {
+        background: #e9ecef;
+        border-color: #0d6efd;
+    }
+
+    .file-upload-wrapper input[type="file"] {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .img-thumbnail {
+        object-fit: cover;
+        width: 100%;
+    }
+
+        /* Базовые стили кнопок */
+    .btn-cancel, .btn-save {
+        position: relative;
+        overflow: hidden;
+        border: none;
+        font-weight: 600;
+        transition: all 0.4s ease;
+        border-radius: 50px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Стиль кнопки Отмена */
+    .btn-cancel {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        color: #495057;
+        border: 1px solid #dee2e6;
+    }
+
+    /* Стиль кнопки Сохранить */
+    .btn-save {
+        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+        color: white;
+    }
+
+    /* Эффекты при наведении */
+    .btn-cancel:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        color: #dc3545;
+    }
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(13, 110, 253, 0.3);
+        background: linear-gradient(135deg, #0b5ed7 0%, #0a58ca 100%);
+    }
+
+    /* Анимационные элементы */
+    .btn-hover-effect {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+    }
+
+    .btn:hover .btn-hover-effect {
+        animation: ripple 1s ease-out;
+    }
+
+    /* Эффект нажатия */
+    .btn-click-effect {
+        position: absolute;
+        background: white;
+        border-radius: 100%;
+        transform: scale(0);
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
+    .btn:active .btn-click-effect {
+        animation: click-effect 0.4s ease-out;
+    }
+
+    /* Анимации */
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(25, 25);
+            opacity: 0;
+        }
+    }
+
+    @keyframes click-effect {
+        0% {
+            transform: scale(0, 0);
+            opacity: 0.3;
+        }
+        100% {
+            transform: scale(1, 1);
+            opacity: 0;
+        }
+    }
+
+    /* Адаптивность */
+    @media (max-width: 576px) {
+        .btn-cancel, .btn-save {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<script>
+    // Валидация формы
+    (function () {
+        'use strict'
+
+        // Показываем имя выбранного файла
+        document.querySelectorAll('input[type="file"]').forEach(function(input) {
+            input.addEventListener('change', function(e) {
+                let fileName = e.target.files[0]?.name || 'Файл не выбран';
+                let label = input.nextElementSibling.querySelector('.file-upload-text');
+                label.textContent = fileName;
+            });
+        });
+
+        // Валидация Bootstrap
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+
+
+
+        // Показываем имя выбранного файла
+    document.querySelectorAll('input[type="file"]').forEach(function(input) {
+        input.addEventListener('change', function(e) {
+            let fileName = e.target.files[0]?.name || 'Файл не выбран';
+            let label = input.nextElementSibling.querySelector('.file-upload-text');
+            label.textContent = fileName;
+
+            // Превью для изображений
+            if(e.target.files[0] && e.target.files[0].type.startsWith('image/')) {
+                let preview = input.closest('.photo-upload-card').querySelector('.current-photo');
+                if(!preview) {
+                    preview = document.createElement('div');
+                    preview.className = 'current-photo mb-3';
+                    input.closest('.file-upload-wrapper').before(preview);
+                }
+
+                let img = preview.querySelector('img');
+                if(!img) {
+                    img = document.createElement('img');
+                    img.className = 'img-thumbnail rounded-3 d-block';
+                    img.style.maxHeight = '150px';
+                    preview.prepend(img);
+                }
+
+                img.src = URL.createObjectURL(e.target.files[0]);
+            }
+        });
+    });
+
+        // Динамическое создание эффектов при наведении
+    document.querySelectorAll('.btn').forEach(btn => {
+        // Создаем элемент для эффекта волны
+        const hoverEffect = document.createElement('span');
+        hoverEffect.className = 'btn-hover-effect';
+        btn.appendChild(hoverEffect);
+
+        // Создаем элемент для эффекта нажатия
+        if(btn.classList.contains('btn-save')) {
+            const clickEffect = document.createElement('span');
+            clickEffect.className = 'btn-click-effect';
+            btn.appendChild(clickEffect);
+
+            // Позиционируем эффект нажатия относительно места клика
+            btn.addEventListener('mousedown', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                clickEffect.style.left = x + 'px';
+                clickEffect.style.top = y + 'px';
+                clickEffect.style.width = '20px';
+                clickEffect.style.height = '20px';
+            });
+        }
+    });
+
+
+</script>
+{% endblock %}

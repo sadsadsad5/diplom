@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} | О компании {% endblock %}
+
+{% block content %}
+
+<!-- Hero Section with Background Image -->
+<section class="hero-section about-hero position-relative overflow-hidden bg-dark text-white">
+  <!-- Background Image with Overlay -->
+  <div class="hero-background" style="background-image: url('{% static 'img/skyscrapers-night.jpg' %}');"></div>
+  <div class="dark-overlay"></div>
+
+  <!-- Content -->
+  <div class="container position-relative py-5" style="z-index: 2;">
+    <div class="row min-vh-60 align-items-center">
+      <div class="col-lg-8">
+        <!-- Company Name with subtle animation -->
+        <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Timur Company</h1>
+
+        <!-- Tagline -->
+        <p class="lead fs-4 mb-5 animate__animated animate__fadeIn animate__delay-1s">
+          Трансформируем ваши мечты о недвижимости в реальность с 2010 года
+        </p>
+
+        <!-- Buttons Container with gap -->
+        <div class="d-flex flex-wrap align-items-center animate__animated animate__fadeInUp animate__delay-1s">
+          <!-- Listings Button -->
+          <a href="{% url 'listings' %}" class="btn btn-primary btn-lg px-4 py-3 rounded-pill shadow">
+            <i class="fas fa-search me-2"></i> Наши предложения
+          </a>
+
+          <!-- Divider -->
+          <span class="mx-3 text-white-50"></span>
+
+          <!-- Contact Button -->
+          <a href="#contact" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill shadow">
+            <i class="fas fa-phone-alt me-2"></i> Связаться
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="stat-card p-4 rounded-4 text-center shadow-sm">
+          <h2 class="display-4 fw-bold text-primary">13+</h2>
+          <p class="mb-0 text-muted">Лет на рынке</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card p-4 rounded-4 text-center shadow-sm">
+          <h2 class="display-4 fw-bold text-primary">1200+</h2>
+          <p class="mb-0 text-muted">Объектов в базе</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card p-4 rounded-4 text-center shadow-sm">
+          <h2 class="display-4 fw-bold text-primary">78%</h2>
+          <p class="mb-0 text-muted">Клиентов возвращаются</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card p-4 rounded-4 text-center shadow-sm">
+          <h2 class="display-4 fw-bold text-primary">50+</h2>
+          <p class="mb-0 text-muted">Параметров подбора</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="py-6 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="bg-white rounded-4 shadow-sm p-5">
+          <div style="height: 40px;"></div>
+          <!-- или с классами Bootstrap -->
+          <div class="py-2"></div>
+          <h2 class="display-5 fw-bold mb-5 text-center">Почему выбирают нас?</h2>
+
+          <p class="lead text-center mb-5">Мы не просто продаем недвижимость — мы создаем пространство для вашей идеальной жизни.</p>
+
+          <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-4">
+              <div class="h-100 p-4 rounded-4 border hover-shadow">
+                <div class="icon-square bg-primary bg-opacity-10 text-primary rounded-3 p-3 mb-3">
+                  <i class="fas fa-search-dollar fa-lg"></i>
+                </div>
+                <h3 class="h5 mb-3">Индивидуальный подход</h3>
+                <p class="mb-0 text-muted">Подбираем недвижимость по 50+ параметрам, соответствующим вашему стилю жизни.</p>
+              </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="col-md-4">
+              <div class="h-100 p-4 rounded-4 border hover-shadow">
+                <div class="icon-square bg-primary bg-opacity-10 text-primary rounded-3 p-3 mb-3">
+                  <i class="fas fa-shield-alt fa-lg"></i>
+                </div>
+                <h3 class="h5 mb-3">100% безопасность</h3>
+                <p class="mb-0 text-muted">Полное юридическое сопровождение и проверка всех объектов.</p>
+              </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="col-md-4">
+              <div class="h-100 p-4 rounded-4 border hover-shadow">
+                <div class="icon-square bg-primary bg-opacity-10 text-primary rounded-3 p-3 mb-3">
+                  <i class="fas fa-headset fa-lg"></i>
+                </div>
+                <h3 class="h5 mb-3">Персональный менеджер</h3>
+                <p class="mb-0 text-muted">Круглосуточная поддержка на всех этапах сделки.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MVP Realtor -->
+<section class="py-6 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center mb-5">
+        <div style="height: 40px;"></div>
+        <!-- или с классами Bootstrap -->
+        <div class="py-2"></div>
+        <h2 class="display-5 fw-bold mb-3">Риэлтор месяца</h2>
+        <p class="lead">Наши специалисты — это профессионалы с многолетним опытом и сотнями довольных клиентов.</p>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      {% if mvp_realtors %}
+        {% for realtor in mvp_realtors %}
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="row g-0">
+              <div class="col-md-5">
+                <img src="{{ realtor.photo.url }}" class="img-fluid h-100 object-fit-cover" alt="{{ realtor.name }}">
+              </div>
+              <div class="col-md-7">
+                <div class="card-body p-4 p-xl-5">
+                  <div class="d-flex align-items-center mb-3">
+                    <span class="badge bg-primary rounded-pill me-2">ТОП</span>
+                    <small class="text-muted"><i class="fas fa-award text-warning me-1"></i> Риэлтор месяца</small>
+                  </div>
+                  <h3 class="h2 mb-3">{{ realtor.name }}</h3>
+                  <p class="mb-4">{{ realtor.description }}</p>
+                  <ul class="list-unstyled mb-4">
+                    <li class="mb-2"><i class="fas fa-phone text-primary me-2"></i> {{ realtor.phone }}</li>
+                    <li><i class="fas fa-envelope text-primary me-2"></i> {{ realtor.email }}</li>
+                  </ul>
+                  <a href="#contact" class="btn btn-primary rounded-pill px-4">Связаться</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-6" id="team">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center mb-5">
+        <div style="height: 40px;"></div>
+        <!-- или с классами Bootstrap -->
+        <div class="py-2"></div>
+        <h2 class="display-5 fw-bold mb-3">Наши специалисты</h2>
+        <p class="lead">Профессионалы, которые помогут вам найти дом мечты</p>
+      </div>
+    </div>
+    <div class="row g-4">
+      {% if realtors %}
+        {% for realtor in realtors %}
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+            <div class="card-img-top overflow-hidden">
+              <img src="{{ realtor.photo.url }}" class="img-fluid w-100" alt="{{ realtor.name }}" style="height: 250px; object-fit: cover;">
+            </div>
+            <div class="card-body text-center p-4">
+              <h3 class="h5 mb-1">{{ realtor.name }}</h3>
+              <p class="text-muted small mb-3">Старший риэлтор</p>
+              <p class="mb-4">{{ realtor.description|truncatewords:20 }}</p>
+              <div class="d-flex justify-content-center gap-3">
+                <a href="tel:{{ realtor.phone }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                  <i class="fas fa-phone me-1"></i> Позвонить
+                </a>
+                <a href="mailto:{{ realtor.email }}" class="btn btn-sm btn-primary rounded-pill px-3">
+                  <i class="fas fa-envelope me-1"></i> Написать
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12 text-center">
+          <div class="alert alert-info">В данный момент нет активных риэлторов</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+
+<style>
+  /* Custom Styles */
+  .hero-section {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .parallax-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: 1;
+  }
+
+  .dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+  }
+
+  .stat-card {
+    background: white;
+    transition: transform 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .bg-primary-soft {
+    background-color: rgba(13, 110, 253, 0.1);
+  }
+
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+  }
+
+  .icon-square {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .rounded-4 {
+    border-radius: 1rem !important;
+  }
+
+  .object-fit-cover {
+    object-fit: cover;
+  }
+    /* Hero Section Styles */
+  .hero-section {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    background-color: #000;
+  }
+
+  .hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: 1;
+    opacity: 0.8;
+  }
+
+  .dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+    z-index: 1;
+  }
+
+  /* Button Styles */
+  .btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(13, 110, 253, 0.3) !important;
+  }
+    /* Custom Styles */
+  .hover-shadow {
+    transition: all 0.3s ease;
+  }
+
+  .hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  }
+
+  .icon-square {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .rounded-4 {
+    border-radius: 1rem !important;
+  }
+
+
+
+</style>
+
+{% endblock %}
